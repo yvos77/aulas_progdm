@@ -1,0 +1,56 @@
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { rotulo_input_meta, rotulo_btn_cadastro_meta, rotulo_lista_metas } from './mensagens.js';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+
+      <Text style={styles.titulo}>{rotulo_lista_metas}</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder={rotulo_input_meta}
+      />
+
+      <View style={styles.botao}>
+        <Button title={rotulo_btn_cadastro_meta} />
+      </View>
+
+      <StatusBar style="auto" />
+
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+
+  container: {
+    flex: 1,
+    backgroundColor: '#f2f2f2',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+
+  titulo: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 30,
+  },
+
+  input: {
+    width: '100%',
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 15,
+  },
+
+  botao: {
+    width: '100%',
+  }
+
+});
