@@ -4,24 +4,43 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import MetaList from './components/MetaList.js';
 import MetaInput from './components/MetaInput.js';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
 
   const [metas, setMetas] = useState([]);
 
   function adicionarMetaHandler(inputMeta) {
+    const novaMeta = { id: Math.random().toString(), texto: inputMeta };
     setMetas([...metas, inputMeta]);
   }
 
+  function deletarMetaHandler(id) {
+    console.log(id);
+    const novasMetas = metas.filter(meta => meta.id !== id);
+    setMetas(novasMetas);
+  }
+
   return (
-    <View style={styles.mainContainer}>
-      
+    <SafeAreaProvider>
+    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.imageContainer}>
+      <Image
+        source={require('./assets/favicon.png')}
+        style={styles.image}
+        resizeMode="contain"
+        />
+      </View>
+      <View style={styles.mainContainer}>
         <MetaInput onAddMeta={adicionarMetaHandler} />
 
       <View style={styles.metaContainer}>
-        <MetaList array={metas} />
+        <MetaList array={metas} 
+        onDeleteItem={deletarMetaHandler} />
       </View>
     </View>
+  </SafeAreaView>
+  </SafeAreaProvider>
   );
 }
 

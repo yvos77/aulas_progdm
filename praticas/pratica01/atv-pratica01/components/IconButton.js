@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     marginVertical: 2,
   },
   pressed: {
-    opacity: 0.75, // Efeito visual de quando o botão é pressionado
+    opacity: 0.75, 
   },
 });
 

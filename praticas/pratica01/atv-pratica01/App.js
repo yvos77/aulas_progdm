@@ -2,13 +2,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
+import DespesasContextProvider from './store/despesas-context';
 
-// Importando as Telas
 import DespesasRecentes from './screens/DespesasRecentes';
 import TodasDespesas from './screens/TodasDespesas';
 import GerenciarDespesa from './screens/GerenciarDespesa';
 
-// 1. IMPORTANDO O NOSSO NOVO BOTÃO:
 import IconButton from './components/IconButton'; 
 
 const Tab = createBottomTabNavigator();
@@ -20,14 +19,14 @@ function BottomTabScreen() {
       <Tab.Screen 
         name="DespesasRecentes" 
         component={DespesasRecentes} 
-        // 2. Transforma o 'options' em função para acessar o 'navigation'
+
         options={({ navigation }) => ({
           title: 'Despesas Recentes',
           tabBarLabel: 'Recentes',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="hourglass" size={size} color={color} />
           ),
-          // 3. Adiciona o botão no topo à direita e configura o clique (onPress)
+
           headerRight: () => (
             <IconButton 
               icon="add" 
@@ -63,25 +62,24 @@ function BottomTabScreen() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        
-        <Stack.Screen 
-          name="Despesas" 
-          component={BottomTabScreen} 
-          options={{ headerShown: false }} 
-        />
-        
-        <Stack.Screen 
-          name="GerenciarDespesa" 
-          component={GerenciarDespesa}
-          // Se quiser, pode colocar um título bonitinho na tela que vai abrir:
-          options={{
-            title: 'Adicionar Despesa' 
-          }}
-        />
-        
-      </Stack.Navigator>
-    </NavigationContainer>
+    <DespesasContextProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          
+          <Stack.Screen 
+            name="Despesas" 
+            component={BottomTabScreen} 
+            options={{ headerShown: false }} 
+          />
+          
+          <Stack.Screen 
+            name="GerenciarDespesa" 
+            component={GerenciarDespesa}
+            options={{ title: 'Adicionar Despesa' }}
+          />
+          
+        </Stack.Navigator>
+      </NavigationContainer>
+    </DespesasContextProvider>
   );
 }
