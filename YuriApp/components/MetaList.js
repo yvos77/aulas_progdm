@@ -1,11 +1,26 @@
-import { StyleSheet, Text, ScrollView } from "react-native";
+import { StyleSheet, Text, ScrollView, Pressable, View } from "react-native";
 
 function MetaList(props) {
- return (
+
+    return (
     <ScrollView >
-        {props.array.map((meta, index) => <Text key={index} 
-        style={styles.item}>{meta}</Text>)}
-    </ScrollView>
+        {props.array.map((meta) => {
+            return (
+                <View key={meta.id}>
+                <Pressable
+                android_ripple={{color: 'yellow'}}
+                key={meta.id}
+                onPress={()=> props.onDeleteItem(meta.id)}
+                >
+                <Text 
+                style={{padding: 8}}>{meta.texto}</Text>
+                </Pressable>
+                </View>
+            )
+
+            }
+             )}
+        </ScrollView>
     );
 };
 
