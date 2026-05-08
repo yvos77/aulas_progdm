@@ -17,6 +17,7 @@ export default function TabsLayout() {
           paddingTop: 5,
           backgroundColor: colors.background
         },
+        tabBarHideOnKeyboard: true,
         tabBarButton: (props) => <TouchableOpacity {...props} activeOpacity={0.8}/>
       }}
     >
