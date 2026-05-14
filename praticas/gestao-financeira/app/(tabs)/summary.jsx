@@ -1,80 +1,75 @@
 import { useContext, useMemo } from "react"
 import { MoneyContext } from "../../contexts/GlobalState"
-import { categories } from "../../constants/categories"
 import { globalStyles } from "../../styles/globalStyles"
 import SummaryItem from "../../components/SummaryItem"
-import { StyleSheet, Text, View } from "react-native"
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native"
 import { colors } from "../../constants/colors"
 
-const SUMMARY_CATEGORY_KEYS = [
-  categories.income.name,
-  categories.food.name,
-  categories.house.name,
-  categories.education.name,
-  categories.travel.name,
-]
-
 export default function Summary() {
-  const [transactions] = useContext(MoneyContext)
+  const { transactions, categories, loading } = useContext(MoneyContext)
 
-  const getTotals = () => {
-    const totals = {
-      sum: 0,
-      income: 0,
-      food: 0,
-      education: 0,
-      house: 0,
-      travel: 0,
-    }
+  const totals = useMemo(() => {
+    const map = {}
+    let sum = 0
 
-    for (let i = 0; i < transactions.length; i++) {
-      const item = transactions[i]
-      if (!SUMMARY_CATEGORY_KEYS.includes(item.category)) {
-        continue
-      }
+    for (const item of transactions) {
+      const cat = categories.find((c) => c.id === item.categoryId)
+      if (!cat) continue
 
-      totals[item.category] += item.value
+      if (!map[cat.id]) map[cat.id] = 0
+      map[cat.id] += Number(item.value)
 
-      if (item.category === categories.income.name) {
-        totals.sum += item.value
+      if (cat.isIncome) {
+        sum += Number(item.value)
       } else {
-        totals.sum -= item.value
+        sum -= Number(item.value)
       }
     }
-    return totals
-  }
 
-  const totals = useMemo(getTotals, [transactions])
+    return { map, sum }
+  }, [transactions, categories])
+
+  const incomeCategories = categories.filter((c) => c.isIncome)
+  const expenseCategories = categories.filter((c) => !c.isIncome)
 
   const valueStyle =
     totals.sum > 0 ? globalStyles.positiveText : globalStyles.negativeText
 
+  if (loading) {
+    return (
+      <View style={[globalStyles.screenContainer, { alignItems: "center", justifyContent: "center" }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    )
+  }
+
   return (
     <View style={globalStyles.screenContainer}>
       <View style={globalStyles.content}>
-        <SummaryItem
-          category={categories.income.name}
-          value={totals[categories.income.name]}
-        />
-        <SummaryItem
-          category={categories.food.name}
-          value={totals[categories.food.name]}
-        />
-        <SummaryItem
-          category={categories.house.name}
-          value={totals[categories.house.name]}
-        />
-        <SummaryItem
-          category={categories.education.name}
-          value={totals[categories.education.name]}
-        />
-        <SummaryItem
-          category={categories.travel.name}
-          value={totals[categories.travel.name]}
-        />
+
+        {/* Renda */}
+        {incomeCategories.map((cat) => (
+          <SummaryItem
+            key={cat.id}
+            category={cat}
+            value={totals.map[cat.id] ?? 0}
+          />
+        ))}
 
         <View style={globalStyles.line} />
 
+        {/* Despesas */}
+        {expenseCategories.map((cat) => (
+          <SummaryItem
+            key={cat.id}
+            category={cat}
+            value={totals.map[cat.id] ?? 0}
+          />
+        ))}
+
+        <View style={globalStyles.line} />
+
+        {/* Saldo */}
         <View style={styles.balance}>
           <Text style={styles.balanceText}>Saldo</Text>
           <Text style={valueStyle}>
@@ -84,6 +79,7 @@ export default function Summary() {
             })}
           </Text>
         </View>
+
       </View>
     </View>
   )

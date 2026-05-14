@@ -9,14 +9,13 @@ import {
 } from "react-native"
 import { globalStyles } from "../styles/globalStyles"
 import { colors } from "../constants/colors"
-import { categories } from "../constants/categories"
 import { useState } from "react"
 
-export default function CategoryPicker({ form, setForm }) {
+export default function CategoryPicker({ form, setForm, categories = [] }) {
   const [showPicker, setShowPicker] = useState(false)
 
-  const selectedCategory = Object.values(categories).find(
-    (cat) => cat.name === form.category
+  const selectedCategory = categories.find(
+    (cat) => cat.id === form.category
   )
 
   const picker = (
@@ -27,31 +26,14 @@ export default function CategoryPicker({ form, setForm }) {
         if (Platform.OS === "android") setShowPicker(false)
       }}
     >
-      <Picker.Item
-        label={categories.income.displayName}
-        value={categories.income.name}
-        color={colors.primaryText}
-      />
-      <Picker.Item
-        label={categories.food.displayName}
-        value={categories.food.name}
-        color={colors.primaryText}
-      />
-      <Picker.Item
-        label={categories.house.displayName}
-        value={categories.house.name}
-        color={colors.primaryText}
-      />
-      <Picker.Item
-        label={categories.education.displayName}
-        value={categories.education.name}
-        color={colors.primaryText}
-      />
-      <Picker.Item
-        label={categories.travel.displayName}
-        value={categories.travel.name}
-        color={colors.primaryText}
-      />
+      {categories.map((cat) => (
+        <Picker.Item
+          key={cat.id}
+          label={cat.displayName}
+          value={cat.id}
+          color={colors.primaryText}
+        />
+      ))}
     </Picker>
   )
 
