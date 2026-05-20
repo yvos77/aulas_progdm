@@ -30,6 +30,17 @@ export default function TabsLayout() {
           )
         }}
       />
+
+      <Tabs.Screen
+        name="categories"
+        options={{
+          title: "Categorias",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="category" size={26} color={color} />
+          ),
+        }}
+      />
+
       <Tabs.Screen
         name="add-transactions"
         options={{
