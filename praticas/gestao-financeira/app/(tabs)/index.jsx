@@ -25,6 +25,7 @@ import DatePicker from "../../components/DatePicker"
 import CategoryPicker from "../../components/CategoryPicker"
 import Button from "../../components/Button"
 import MonthYearFilter from "../../components/MonthYearFilter"
+import { useAuth } from "../../contexts/AuthContext"
 
 export default function Transactions() {
   const {
@@ -37,6 +38,7 @@ export default function Transactions() {
     updateTransaction,
   } = useContext(MoneyContext)
 
+  const { user, logout } = useAuth()
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [editModalVisible, setEditModalVisible] = useState(false)
   const [editForm, setEditForm] = useState(null)
@@ -145,6 +147,7 @@ export default function Transactions() {
   return (
     <View style={globalStyles.screenContainer}>
       <View style={{ paddingHorizontal: 20, paddingTop: 12 }}>
+        <Text style={styles.welcome}>Olá, {user?.name}! 👋</Text>
         <MonthYearFilter
           selectedDate={selectedDate}
           onChange={setSelectedDate}
@@ -231,6 +234,12 @@ export default function Transactions() {
 }
 
 const styles = StyleSheet.create({
+  welcome: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: colors.primaryText,
+    marginBottom: 8,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",

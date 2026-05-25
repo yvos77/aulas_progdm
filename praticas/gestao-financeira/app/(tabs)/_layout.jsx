@@ -1,9 +1,41 @@
-import { Tabs } from "expo-router"
+import { Tabs, useRouter } from "expo-router"
 import { colors } from "../../constants/colors"
 import { MaterialIcons } from "@expo/vector-icons"
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { StyleSheet, TouchableOpacity, View, ActivityIndicator, Alert } from "react-native"
+import { useAuth } from "../../contexts/AuthContext"
+import { useEffect } from "react"
 
 export default function TabsLayout() {
+  const { user, loading, logout } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login")
+    }
+  }, [user, loading, router])
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    )
+  }
+
+  if (!user) return null
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Sair",
+      "Deseja deslogar?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Sair", style: "destructive", onPress: logout },
+      ]
+    )
+  }
+
   return (
     <Tabs
       screenOptions={{
@@ -27,20 +59,26 @@ export default function TabsLayout() {
           title: "Transações",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="attach-money" size={28} color={color} />
-          )
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={handleLogout}
+              style={{ marginRight: 16 }}
+            >
+              <MaterialIcons name="logout" size={24} color={colors.primaryContrast} />
+            </TouchableOpacity>
+          ),
         }}
       />
-
       <Tabs.Screen
         name="categories"
         options={{
           title: "Categorias",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="category" size={26} color={color} />
-          ),
+          )
         }}
       />
-
       <Tabs.Screen
         name="add-transactions"
         options={{

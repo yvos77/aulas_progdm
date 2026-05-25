@@ -1,4 +1,4 @@
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000"
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://10.0.2.2:3000"
 
 async function request(path, options = {}) {
   const response = await fetch(`${BASE_URL}${path}`, {
@@ -15,13 +15,19 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  listCategories:    ()        => request("/categories"),
-  createCategory:    (data)    => request("/categories",        { method: "POST",   body: JSON.stringify(data) }),
-  updateCategory:    (id, d)   => request(`/categories/${id}`,  { method: "PUT",    body: JSON.stringify(d) }),
-  deleteCategory:    (id)      => request(`/categories/${id}`,  { method: "DELETE" }),
+  // Auth
+  register: (data) => request("/auth/register", { method: "POST", body: JSON.stringify(data) }),
+  login:    (data) => request("/auth/login",    { method: "POST", body: JSON.stringify(data) }),
 
-  listTransactions:  ()        => request("/transactions"),
-  createTransaction: (data)    => request("/transactions",       { method: "POST",   body: JSON.stringify(data) }),
-  updateTransaction: (id, d)   => request(`/transactions/${id}`, { method: "PUT",    body: JSON.stringify(d) }),
-  deleteTransaction: (id)      => request(`/transactions/${id}`, { method: "DELETE" }),
+  // Categories
+  listCategories:  ()       => request("/categories"),
+  createCategory:  (data)   => request("/categories",       { method: "POST",   body: JSON.stringify(data) }),
+  updateCategory:  (id, d)  => request(`/categories/${id}`, { method: "PUT",    body: JSON.stringify(d) }),
+  deleteCategory:  (id)     => request(`/categories/${id}`, { method: "DELETE" }),
+
+  // Transactions
+  listTransactions:  ()       => request("/transactions"),
+  createTransaction: (data)   => request("/transactions",       { method: "POST",   body: JSON.stringify(data) }),
+  updateTransaction: (id, d)  => request(`/transactions/${id}`, { method: "PUT",    body: JSON.stringify(d) }),
+  deleteTransaction: (id)     => request(`/transactions/${id}`, { method: "DELETE" }),
 }
