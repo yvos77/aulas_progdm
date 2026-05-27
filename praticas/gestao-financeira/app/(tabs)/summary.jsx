@@ -13,7 +13,6 @@ import {
 import { colors } from "../../constants/colors"
 import MonthYearFilter from "../../components/MonthYearFilter"
 import { PieChart } from "react-native-chart-kit"
-import { MaterialIcons } from "@expo/vector-icons"
 
 const SCREEN_WIDTH = Dimensions.get("window").width
 
@@ -82,9 +81,9 @@ export default function Summary() {
       </View>
 
       <ScrollView style={globalStyles.content}>
-        <View style={styles.chartContainer}>
-          <Text style={styles.chartTitle}>Distribuição de Despesas</Text>
-          {pieData.length > 0 ? (
+        {pieData.length > 0 && (
+          <View style={styles.chartContainer}>
+            <Text style={styles.chartTitle}>Distribuição de Despesas</Text>
             <PieChart
               data={pieData}
               width={SCREEN_WIDTH - 40}
@@ -97,16 +96,8 @@ export default function Summary() {
               paddingLeft="15"
               absolute={false}
             />
-          ) : (
-            <View style={styles.emptyChart}>
-              <MaterialIcons name="pie-chart" size={48} color={colors.secondaryText} />
-              <Text style={styles.emptyChartText}>
-                Nenhuma despesa em{"\n"}
-                {selectedDate.toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}
-              </Text>
-            </View>
-          )}
-        </View>
+          </View>
+        )}
 
         {incomeCategories.map((cat) => (
           <SummaryItem
@@ -155,18 +146,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.primaryText,
     marginBottom: 8,
-  },
-  emptyChart: {
-    height: 150,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 12,
-  },
-  emptyChartText: {
-    fontSize: 14,
-    color: colors.secondaryText,
-    textAlign: "center",
-    lineHeight: 22,
   },
   balance: {
     flexDirection: "row",
